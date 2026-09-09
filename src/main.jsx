@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, Float, MeshTransmissionMaterial, Sparkles } from '@react-three/drei'
 import { EffectComposer, Bloom, ChromaticAberration, Vignette } from '@react-three/postprocessing'
 import * as THREE from 'three'
+import RealCar from './RealCar'
 import './styles.css'
 
 const C = { blue: '#1b65ff', amber: '#ff9f32', white: '#edf3ff' }
@@ -19,7 +20,7 @@ function Wheel({ position, steer = 0 }) {
   </group>
 }
 
-function Car() {
+function ProceduralCar() {
   const group = useRef()
   useFrame((state) => {
     const t = state.clock.elapsedTime
@@ -28,7 +29,7 @@ function Car() {
   })
   return <group ref={group} position={[1.15, -1.05, 0.15]} rotation={[0, -0.18, 0]} scale={1.45}>
     <mesh position={[0, 0.46, 0]} castShadow><boxGeometry args={[3.55, 0.62, 1.45]} /><meshPhysicalMaterial color="#070a10" metalness={0.96} roughness={0.13} clearcoat={1} clearcoatRoughness={0.08} /></mesh>
-    <mesh position={[-0.12, 0.9, 0]} rotation={[0, 0, 0]} castShadow><boxGeometry args={[2.15, 0.7, 1.25]} /><meshPhysicalMaterial color="#090d15" metalness={0.9} roughness={0.12} clearcoat={1} /></mesh>
+    <mesh position={[-0.12, 0.9, 0]} castShadow><boxGeometry args={[2.15, 0.7, 1.25]} /><meshPhysicalMaterial color="#090d15" metalness={0.9} roughness={0.12} clearcoat={1} /></mesh>
     <mesh position={[-0.12, 0.91, 0]}><boxGeometry args={[1.92, 0.52, 1.28]} /><MeshTransmissionMaterial transmission={0.78} thickness={0.08} roughness={0.08} ior={1.48} color="#15263d" chromaticAberration={0.03} /></mesh>
     <mesh position={[1.79, 0.55, 0]}><boxGeometry args={[0.035, 0.25, 1.02]} /><meshStandardMaterial color="#111827" metalness={1} roughness={0.16} /></mesh>
     <mesh position={[1.82, 0.56, 0.48]}><boxGeometry args={[0.025, 0.14, 0.32]} /><meshStandardMaterial color="#dbe9ff" emissive="#b9d7ff" emissiveIntensity={7} /></mesh>
@@ -108,7 +109,9 @@ function Scene({ pointer, scroll }) {
     root.current.rotation.z = Math.sin(t * .12) * .003
   })
   return <group ref={root}>
-    <Showroom /><City /><Bridge /><Helicopter /><Car /><Particles />
+    <Showroom /><City /><Bridge /><Helicopter />
+    <RealCar fallback={<ProceduralCar />} />
+    <Particles />
     <Float speed={.7} rotationIntensity={.12} floatIntensity={.08}><group position={[-3.9, .4, -2.8]}><mesh><boxGeometry args={[1.1, .7, .08]} /><meshStandardMaterial color="#0b1018" metalness={.4} roughness={.35} /></mesh><mesh position={[0, .38, 0]}><boxGeometry args={[1.25, .04, .04]} /><meshStandardMaterial color="#ff9f32" emissive="#ff7200" emissiveIntensity={3} /></mesh></group></Float>
   </group>
 }
